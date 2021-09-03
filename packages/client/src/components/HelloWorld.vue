@@ -1,12 +1,21 @@
 <script setup lang="ts">
-import { log } from 'util';
 import { ref, onMounted } from 'vue'
+import { createHttpClient } from 'shared';
+import { Req, Res } from '../../../shared/src/types';
+
 
 defineProps<{ msg: string }>()
 
+// type ICalls = {
+//   getUser: (req: Req<string>) => Res<string>;
+// }
+
+
 onMounted(async () => {
   const users = await fetch("/api/users");
-  console.log(users);
+  // const client = createHttpClient<ICalls>("/api");
+
+  // console.log(await client.getUser("test"))
 })
 
 const count = ref(0)
