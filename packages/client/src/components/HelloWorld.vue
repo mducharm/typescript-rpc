@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { log } from 'util';
+import { ref, onMounted } from 'vue'
 
 defineProps<{ msg: string }>()
+
+onMounted(async () => {
+  const users = await fetch("/api/users");
+  console.log(users);
+})
 
 const count = ref(0)
 </script>
