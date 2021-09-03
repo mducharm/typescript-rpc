@@ -23,6 +23,7 @@
     "debug": "^4.3.2",
     "express": "^4.17.1",
     "express-winston": "^4.2.0",
+    "shared": "^0.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
