@@ -1,15 +1,15 @@
-export type Req<T> = {
+export type Req = {
     jsonrpc: "2.0",
     id: number,
     method: string,
-    params: T,
+    params: any,
 }
 
-export type Res<T> = {
+export type Res = {
     jsonrpc: "2.0",
     id: number,
 } & (
-        | { result: T, error?: never }
+        | { result: any, error?: never }
         | { result?: never, error: Err }
     )
 
