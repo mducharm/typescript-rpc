@@ -1,1 +1,1 @@
-export type KeyOf<T> = Extract<T, string>;
+export type KeyOf<T> = Extract<keyof T, string>;
