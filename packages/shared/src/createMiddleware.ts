@@ -1,8 +1,8 @@
 import { Calls, Err, Procedure, Req, Res } from './types/common';
-import { ExpressMiddleware, MiddlwareImpl } from './types/server';
+import { ExpressMiddleware, MiddlewareCalls } from './types/server';
 import { KeyOf } from './types/utilities';
 
-function createHandler<T extends { [Property in KeyOf<T>]: (req: Parameters<T[KeyOf<T>]>) => { result: ReturnType<T[KeyOf<T>]>, error?: Err } }>(implementation: T) {
+function createHandler<T>(implementation: MiddlewareCalls<T>) {
 
     const handler = {
         get(target, prop: KeyOf<T>) {
@@ -17,7 +17,7 @@ function createHandler<T extends { [Property in KeyOf<T>]: (req: Parameters<T[Ke
     return new Proxy({}, handler) as T;
 }
 
-export function createMiddleware<T extends Calls<T>>(baseUrl, implementation: MiddlwareImpl<T, T[keyof T]>) {
+export function createMiddleware<T extends Calls<T>>(baseUrl, implementation: MiddlewareCalls<T>) {
     // when request to endpoint comes in, needs to route based on request.body.method
 
     // the implementation won't be Req => Res, it'll be ReqDTO => ResDTO.

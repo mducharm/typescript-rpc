@@ -21,9 +21,9 @@ export type ExpressMiddleware<
     res: Response<Res>,
     next: NextFunction
   ) => Promise<void> | void;
+  
 
-export type MiddlwareImpl<T, TFunc extends (...req: any) => any> = { 
-  [Property in KeyOf<T>]: (req: Parameters<TFunc>['req']) => { response?: ReturnType<TFunc>, error?: Err }
-};
-
-export type MiddlwareFunc<TRequest, TResponse> = (req: TRequest) => { response?: TResponse, error?: Err } 
+export type MiddlewareCalls<T> = T extends
+  { [Property in keyof T]: (...req: infer Rq) => infer Rs }
+    ? { [Property in keyof T]: (...req: Rq) => { response?: Rs, error?: Err } }
+    : never;
