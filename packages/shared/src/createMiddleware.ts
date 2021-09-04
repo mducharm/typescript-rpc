@@ -2,7 +2,7 @@ import { Calls, Err, Procedure, Req, Res } from './types/common';
 import { ExpressMiddleware, MiddlwareImpl } from './types/server';
 import { KeyOf } from './types/utilities';
 
-function createHandler<T extends { [Property in KeyOf<T>]: (req: Parameters<T[KeyOf<T>]>) => { response: ReturnType<T[KeyOf<T>]>, error?: Err } }>(implementation: T) {
+function createHandler<T extends { [Property in KeyOf<T>]: (req: Parameters<T[KeyOf<T>]>) => { result: ReturnType<T[KeyOf<T>]>, error?: Err } }>(implementation: T) {
 
     const handler = {
         get(target, prop: KeyOf<T>) {
@@ -33,7 +33,7 @@ export function createMiddleware<T extends Calls<T>>(baseUrl, implementation: Mi
     const requestHandler: ExpressMiddleware<Req & { params: Params }, Res & { result?: ResponseType }> = (req, res, next) => {
 
         // call user function from implementation
-        const { response, error } = proxy[req.body.method](req.body.params);
+        const { result, error } = proxy[req.body.method](req.body.params);
 
         if (error) {
             const body: Res = {
@@ -46,7 +46,7 @@ export function createMiddleware<T extends Calls<T>>(baseUrl, implementation: Mi
             const body: Res & { result?: ResponseType } = {
                 jsonrpc: "2.0",
                 id: req.body.id,
-                result: response
+                result,
             }
             res.json(body);
         }
