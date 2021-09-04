@@ -23,5 +23,5 @@ export type ExpressMiddleware<
   ) => Promise<void> | void;
 
 export type MiddlewareCalls<T> = T extends { [Property in keyof T]: (...req: infer Rq) => infer Rs }
-    ? { [Property in keyof T]: (...req: Rq) => { response?: Rs, error?: Err } }
+    ? { [Property in keyof T]: (...req: Rq) => { result?: Rs, error?: Err } }
     : never;
