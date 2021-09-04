@@ -1,5 +1,6 @@
+import { Calls, Req, Res } from "./types/common";
 
-function createRPCPayload(method: string, params) {
+function createRPCPayload<T>(method: string, params: T): { params: T } & Req {
     return {
         jsonrpc: "2.0",
         id: 1,
@@ -8,13 +9,15 @@ function createRPCPayload(method: string, params) {
     }
 }
 
-export function createHttpClient<T>(baseUrl) {
+export function createHttpClient<T extends Calls<T>>(baseUrl) {
     const handler = {
         get(target, prop) {
 
             return async (body) => {
 
-                const payload = createRPCPayload(prop, body);
+                type Call = T[keyof T];
+
+                const payload = createRPCPayload<Parameters<Call>>(prop, body);
 
                 const response = await fetch(baseUrl, {
                     method: "POST",
@@ -22,7 +25,9 @@ export function createHttpClient<T>(baseUrl) {
                 });
 
                 if (response.ok) {
-                    return response.json();
+                    return response
+                        .json()
+                        .then((d: Res) => d.result) as Promise<Res>;
                 }
 
                 return Promise.reject(response);
